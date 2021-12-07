@@ -1,0 +1,17 @@
+@relation wine
+
+@attribute alcohol_content {low, high}
+@attribute sweetness {sweet, semi-sweet, dry}
+@attribute type {rose, red, white}
+@attribute popular {yes, no}
+
+@data
+low, sweet, rose, yes
+low, dry, red, no
+low, semi-sweet, red, yes
+high, sweet, rose, no
+low, dry, white, no
+low, sweet, white, no
+high, semi-sweet, red, no
+high, sweet, red, yes
+high, dry, red, yes

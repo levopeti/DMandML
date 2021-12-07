@@ -1,0 +1,10 @@
+Alcohol_content,Sweetness,Type,Popular
+0,sweet,rose,1
+0,dry,red,0
+0,semi-sweet,red,1
+1,sweet,rose,0
+0,dry,white,0
+0,sweet,white,0
+1,semi-sweet,red,0
+1,sweet,red,1
+1,dry,red,1
