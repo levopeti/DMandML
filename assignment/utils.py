@@ -1,11 +1,24 @@
 import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-def get_data(min_size=None, min_size_test=None, fill_nan=None):
-    X_train = pd.read_csv("/home/levcsi/IPCV/DMaML/assignment/data/X_train.csv")
-    Y_train = pd.read_csv("/home/levcsi/IPCV/DMaML/assignment/data/Y_train.csv")
-    X_test = pd.read_csv("/home/levcsi/IPCV/DMaML/assignment/data/X_test.csv")
+def plot_cm(_model, _X_test, _y_test):
+    predictions = _model.predict(_X_test)
+    cm = confusion_matrix(_y_test, predictions)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, normalize="pred")
+    disp.plot()
+    
+def plot_cm_keras(_model, _X_test, _y_test):
+    predictions = _model.predict(_X_test)
+    cm = confusion_matrix(_y_test.argmax(axis=1), predictions.argmax(axis=1), normalize="pred")
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+
+def get_data(min_size=None, min_size_test=None, nan_thresh=None, fill_nan=None):
+    X_train = pd.read_csv("./data/X_train.csv")
+    Y_train = pd.read_csv("./data/Y_train.csv")
+    X_test = pd.read_csv("./data/X_test.csv")
     
     targets = Y_train.TARGET.unique()
     target_map = {targets[i]: i for i in range(len(targets))}
@@ -29,11 +42,22 @@ def get_data(min_size=None, min_size_test=None, fill_nan=None):
     XY_train['Ethnicity_NUM'] = XY_train['Ethnicity'].map(Ethnicity_map)
     XY_train['Gender_NUM'] = XY_train['Gender'].map(Gender_map)
     XY_train['TARGET_NUM'] = XY_train['TARGET'].map(target_map)
+    XY_train['Condition_importance_NUM'] = XY_train['Condition_importance']
+    XY_train['Hospital_death_flag_NUM'] = XY_train['Hospital_death_flag']
+    XY_train.drop('Condition_importance', inplace=True, axis=1)
+    XY_train.drop('Hospital_death_flag', inplace=True, axis=1)
 
     X_test['Admission_type_NUM'] = X_test['Admission_type'].map(Admission_type_map)
     X_test['Marital_status_NUM'] = X_test['Marital_status'].map(Marital_status_map)
     X_test['Ethnicity_NUM'] = X_test['Ethnicity'].map(Ethnicity_map)
     X_test['Gender_NUM'] = X_test['Gender'].map(Gender_map)
+    X_test['Condition_importance_NUM'] = X_test['Condition_importance']
+    X_test['Hospital_death_flag_NUM'] = X_test['Hospital_death_flag']
+    X_test.drop('Condition_importance', inplace=True, axis=1)
+    X_test.drop('Hospital_death_flag', inplace=True, axis=1)
+    
+    if nan_thresh is not None:
+        XY_train.dropna(thresh=nan_thresh, inplace=True)
 
     columns_for_drop = list()
     for c in XY_train.columns:
