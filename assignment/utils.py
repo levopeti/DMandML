@@ -5,8 +5,8 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 def plot_cm(_model, _X_test, _y_test):
     predictions = _model.predict(_X_test)
-    cm = confusion_matrix(_y_test, predictions)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, normalize="pred")
+    cm = confusion_matrix(_y_test, predictions, normalize="pred")
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
     disp.plot()
     
 def plot_cm_keras(_model, _X_test, _y_test):
@@ -14,6 +14,10 @@ def plot_cm_keras(_model, _X_test, _y_test):
     cm = confusion_matrix(_y_test.argmax(axis=1), predictions.argmax(axis=1), normalize="pred")
     disp = ConfusionMatrixDisplay(confusion_matrix=cm)
     disp.plot()
+    
+def filter_columns(_np_array):
+    mask = np.array([True, False, False, False, False, False, False, True, False, False, True, True, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, False, False, False, False, False, False, True, False, False, False, True, False])
+    return _np_array[:, mask]
 
 def get_data(min_size=None, min_size_test=None, nan_thresh=None, fill_nan=None):
     X_train = pd.read_csv("./data/X_train.csv")
